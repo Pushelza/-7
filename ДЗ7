@@ -1,0 +1,123 @@
+# Задание 1 Реализовать класс Matrix (матрица). Обеспечить перегрузку конструктора
+# класса (метод init()), который должен принимать данные (список списков) для
+# формирования матрицы.
+# Следующий шаг — реализовать перегрузку метода str() для вывода матрицы в привычном виде.
+# Далее реализовать перегрузку метода add() для реализации операции сложения двух
+# объектов класса Matrix (двух матриц).Результатом сложения должна быть новая матрица.
+
+class Matrix:
+    def __init__(self, mat_list):
+        self.mat_list = mat_list
+
+    def __str__(self):
+        return str('\n'.join(['\t'.join([str(el) for el in i]) for i in self.mat_list]))
+
+    def __add__(self, new):
+        for i in range(len(self.mat_list)):
+            for i_2 in range(len(new.mat_list[i])):
+                self.mat_list[i][i_2] = self.mat_list[i][i_2] + new.mat_list[i][i_2]
+            return Matrix.__str__(self)
+
+
+a = Matrix([[5, 10, 0], [30, 10, 1], [9, 5, 8]])
+b = Matrix([[0, 7, -1], [11, -6, 0], [2, 0, 15]])
+print(a.__add__(b))
+print('Задание 1 выполнено\n')
+
+# Задание 2 Реализовать проект расчета суммарного расхода ткани на производство одежды.
+# Основная сущность (класс) этого проекта — одежда, которая может иметь определенное
+# название. К типам одежды в этом проекте относятся пальто и костюм. У этих типов
+# одежды существуют параметры: размер (для пальто) и рост (для костюма).
+# Это могут быть обычные числа: V и H, соответственно.
+# Для определения расхода ткани по каждому типу одежды использовать формулы:
+# для пальто (V/6.5 + 0.5), для костюма (2*H + 0.3). Проверить работу этих методов
+# на реальных данных. Реализовать общий подсчет расхода ткани.
+# Проверить на практике полученные на этом уроке знания: реализовать абстрактные
+# классы для основных классов проекта, проверить на практике работу декоратора @property.
+
+class Textil:
+    def __init__(self, size, height):
+        self.size = size
+        self.height = height
+
+    def get_square_coat(self):
+        return self.size / 6.5 + 0.5, 2
+
+    def get_square_suit(self):
+        return 2 * self.height * 0.01 + 0.3, 2
+
+    @property
+    def get_square_all(self):
+        return str(f'Расход ткани на все изделия '
+                   f' {(self.size / 6.5 + 0.5) + (2 * self.height * 0.01 + 0.3)} кв.м')
+
+
+class Coat(Textil):
+    def __init__(self, size, height):
+        super().__init__(size, height)
+        self.square_coat = round(self.size / 6.5 + 0.5, 2)
+
+    def __str__(self):
+        return f'Расход ткани для пальто {self.square_coat} кв.м'
+
+
+class Suit(Textil):
+    def __init__(self, size, height):
+        super().__init__(size, height)
+        self.square_suit = round(2 * self.height * 0.01 + 0.3, 2)
+
+    def __str__(self):
+        return f'Расход ткани для костюма {self.square_suit} кв.м'
+
+
+coat = Coat(50, 170)
+Suit = Suit(48, 164)
+print(coat)
+print(Suit)
+print(Suit.get_square_all)
+
+print('Задание 2 выполнено\n')
+
+# Задание 3 Реализовать программу работы с органическими клетками,
+# состоящими из ячеек. Необходимо создать класс Клетка.
+# В его конструкторе инициализировать параметр, соответствующий количеству
+# ячеек клетки (целое число). В классе должны быть реализованы методы
+# перегрузки арифметических операторов: сложение (add()), вычитание (sub()),
+# умножение (mul()), деление (truediv()). Данные методы должны применяться
+# только к клеткам и выполнять увеличение, уменьшение, умножение и
+# целочисленное (с округлением до целого) деление клеток, соответственно.
+class Cell:
+    def __init__(self, quantity):
+        self.quantity = int(quantity)
+
+    def __add__(self, other):
+        return f'Размер клетки увеличен. Кол-во ячеек: {self.quantity + other.quantity}'
+
+    def __sub__(self, other):
+        sub = self.quantity - other.quantity
+        return f'Размер клетки сокращен. Кол-во ячеек: {sub} ' if sub > 0 else 'Клетка удалена'
+
+    def __truediv__(self, other):
+        return self.quantity // other.quantity
+
+    def __mul__(self, other):
+        return self.quantity * other.quantity
+
+    def make_order(self, cells_in_row):
+        row = ''
+        for i in range(int(self.quantity / cells_in_row)):
+            row += f'{"*" * cells_in_row} \\n'
+        row += f'{"*" * (self.quantity % cells_in_row)}'
+        return row
+
+
+cell = Cell(11)
+cell_2 = Cell(8)
+
+print(cell + cell_2)
+print(cell - cell_2)
+print(cell / cell_2)
+print(cell * cell_2)
+print(cell.make_order(3))
+print(cell_2.make_order(4))
+print('Задание 3 выполнено')
